@@ -80,10 +80,6 @@ class _PokeListCardState extends State<PokeListCard> {
             child: Container(
               height: 180,
               decoration: BoxDecoration(
-                // border: Border.all(
-                //   color: Colors.grey,
-                //   width: 0.7,
-                // ),
                 gradient: LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,

@@ -39,6 +39,178 @@ class _PokeDetailScreenState extends State<PokeDetailScreen> {
     });
   }
 
+  Widget header() {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            widget.color1.withOpacity(0.7),
+            widget.color2.withOpacity(0.7),
+          ],
+        ),
+        borderRadius: const BorderRadius.only(
+          bottomLeft: Radius.circular(200),
+          bottomRight: Radius.circular(200),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(
+            height: 40,
+          ),
+          SizedBox(
+            height: 70,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 4, right: 4),
+              child: IconButton(
+                icon: const Icon(
+                  Icons.arrow_back_ios_new_outlined,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  Navigator.pop(
+                    context,
+                  );
+                },
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(24, 16, 24, 16),
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    capitalize(poke?.name ?? ""),
+                    style: const TextStyle(
+                      fontSize: 35,
+                      color: Colors.white,
+                    ),
+                  ),
+                  Text(
+                    poke != null
+                        ? "#${poke!.order.toString().padLeft(3, '0')}"
+                        : "",
+                    style: const TextStyle(
+                      fontSize: 26,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 40),
+            child: Align(
+              alignment: Alignment.bottomRight,
+              child: Image.network(
+                poke?.sprites?.frontDefault ?? "",
+                fit: BoxFit.cover,
+                height: 250,
+                width: 250,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget bodyDetail() {
+    return Padding(
+      padding: const EdgeInsets.all(24.0),
+      child: Column(
+        children: [
+          SizedBox(
+            height: 60,
+            width: poke!.types!.length > 1 ? 270 : 130,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: poke?.types?.length,
+              itemBuilder: (context, index) {
+                Color colour =
+                    typeColor(type: poke?.types?[index].type?.name ?? "");
+                return Row(
+                  children: [
+                    Container(
+                      height: 40,
+                      width: 130,
+                      color: colour,
+                      child: Center(
+                        child: Text(
+                          poke != null
+                              ? poke!.types![index].type!.name!.toUpperCase()
+                              : "",
+                          style: const TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 16,
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
+          const SizedBox(
+            height: 8,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text("Order:"),
+              const SizedBox(
+                width: 24,
+              ),
+              Text(
+                poke != null ? poke!.order!.toString() : "",
+              ),
+            ],
+          ),
+          const SizedBox(
+            height: 16,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text("Height:"),
+              const SizedBox(
+                width: 24,
+              ),
+              Text(
+                poke != null ? poke!.height!.toString() : "",
+              ),
+            ],
+          ),
+          const SizedBox(
+            height: 16,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text("Weight:"),
+              const SizedBox(
+                width: 24,
+              ),
+              Text(
+                poke != null ? poke!.weight!.toString() : "",
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -74,172 +246,8 @@ class _PokeDetailScreenState extends State<PokeDetailScreen> {
             body: SingleChildScrollView(
               child: Column(
                 children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          widget.color1.withOpacity(0.7),
-                          widget.color2.withOpacity(0.7),
-                        ],
-                      ),
-                      borderRadius: const BorderRadius.only(
-                        bottomLeft: Radius.circular(200),
-                        bottomRight: Radius.circular(200),
-                      ),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(
-                          height: 40,
-                        ),
-                        SizedBox(
-                          height: 120,
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 4, right: 4),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                IconButton(
-                                  icon: const Icon(
-                                    Icons.arrow_back_ios_new_outlined,
-                                    color: Colors.white,
-                                  ),
-                                  onPressed: () {
-                                    Navigator.pop(
-                                      context,
-                                    );
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(24, 16, 24, 16),
-                          child: Align(
-                            alignment: Alignment.topLeft,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  capitalize(poke?.name ?? ""),
-                                  style: const TextStyle(
-                                    fontSize: 35,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                Text(
-                                  poke != null
-                                      ? "#${poke!.order.toString().padLeft(3, '0')}"
-                                      : "",
-                                  style: const TextStyle(
-                                    fontSize: 26,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 40),
-                          child: Align(
-                            alignment: Alignment.bottomRight,
-                            child: Image.network(
-                              poke?.sprites?.frontDefault ?? "",
-                              fit: BoxFit.cover,
-                              height: 250,
-                              width: 250,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(24.0),
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: 100,
-                          width: poke!.types!.length > 1 ? 270 : 130,
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: poke?.types?.length,
-                            itemBuilder: (context, index) {
-                              Color colour = typeColor(
-                                  type: poke?.types?[index].type?.name ?? "");
-                              return Row(
-                                children: [
-                                  Container(
-                                    height: 40,
-                                    width: 130,
-                                    color: colour,
-                                    child: Center(
-                                      child: Text(
-                                        poke != null ? poke!.types![index].type!.name!.toUpperCase() : "",
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    width: 16,
-                                  ),
-                                ],
-                              );
-                            },
-                          ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Text("Order:"),
-                            const SizedBox(
-                              width: 24,
-                            ),
-                            Text(
-                              poke != null ? poke!.order!.toString() : "",
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 16,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Text("Height:"),
-                            const SizedBox(
-                              width: 24,
-                            ),
-                            Text(
-                              poke != null ? poke!.height!.toString() : "",
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 16,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Text("Weight:"),
-                            const SizedBox(
-                              width: 24,
-                            ),
-                            Text(
-                              poke != null ? poke!.weight!.toString() : "",
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
+                  header(),
+                  bodyDetail(),
                 ],
               ),
             ),

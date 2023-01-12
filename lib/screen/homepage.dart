@@ -12,26 +12,62 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   bool onTapb1 = true;
   bool onTapb2 = false;
+  bool isTablet = false;
+
+  Widget gridCard() {
+    return Expanded(
+      child: GridView.builder(
+        itemCount: 300,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: isTablet ? 4 : 2,
+          crossAxisSpacing: 16,
+          mainAxisSpacing: 16,
+        ),
+        itemBuilder: (context, index) {
+          int id = index + 1;
+          return PokeGridListCard(
+            pokeId: id,
+          );
+        },
+      ),
+    );
+  }
+
+  Widget listCard() {
+    return Expanded(
+      child: ListView.builder(
+        itemCount: 151,
+        itemBuilder: (context, index) {
+          int id = index + 1;
+          return Column(
+            children: [
+              PokeListCard(
+                pokeId: id,
+              ),
+              const SizedBox(
+                height: 16,
+              )
+            ],
+          );
+        },
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (MediaQuery.of(context).size.width > 600) {
+      isTablet = true;
+    } else {
+      isTablet = false;
+    }
     return Scaffold(
       appBar: AppBar(
-        title: InkWell(
-          child: Text(
-            'Pokédex',
-            style: TextStyle(
-              color: Theme.of(context).backgroundColor,
-            ),
+        title: Text(
+          'Pokédex',
+          style: TextStyle(
+            color: Theme.of(context).backgroundColor,
           ),
-          onTap: (){
-            // Navigator.push(
-            //     context,
-            //     MaterialPageRoute(
-            //       builder: (context) => SplashScreen(),
-            //     ),
-            //   );
-          },
         ),
         backgroundColor: Colors.white,
         elevation: 0,
@@ -85,42 +121,10 @@ class _HomePageState extends State<HomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             if (onTapb1) ...[
-              Expanded(
-                child: GridView.builder(
-                  itemCount: 151,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 16,
-                    mainAxisSpacing: 16,
-                  ),
-                  itemBuilder: (context, index) {
-                    int id = index + 1;
-                    return PokeGridListCard(
-                      pokeId: id,
-                    );
-                  },
-                ),
-              ),
+              gridCard(),
             ],
             if (onTapb2) ...[
-              Expanded(
-                child: ListView.builder(
-                  itemCount: 151,
-                  itemBuilder: (context, index) {
-                    int id = index + 1;
-                    return Column(
-                      children: [
-                        PokeListCard(
-                          pokeId: id,
-                        ),
-                        const SizedBox(
-                          height: 16,
-                        )
-                      ],
-                    );
-                  },
-                ),
-              ),
+              listCard(),
             ],
           ],
         ),
