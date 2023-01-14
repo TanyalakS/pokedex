@@ -25,10 +25,8 @@ class _MyAppState extends State<MyApp> {
       title: 'Flutter Demo',
       theme: ThemeData(
         fontFamily: 'Pokemon',
-        primarySwatch: Colors.blue,
-        primaryColor: Colors.blue.shade900,
-        backgroundColor: Colors.red,
-        cardColor: Colors.blue.shade100,
+        primarySwatch: Colors.red,
+        backgroundColor: Colors.red.shade800,
       ),
       home: const SplashScreen(),
     );

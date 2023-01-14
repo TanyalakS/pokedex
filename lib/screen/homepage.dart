@@ -24,9 +24,9 @@ class _HomePageState extends State<HomePage> {
           mainAxisSpacing: 16,
         ),
         itemBuilder: (context, index) {
-          int id = index + 1;
+          int pokeIndex = index + 1;
           return PokeGridListCard(
-            pokeId: id,
+            pokeIndex: pokeIndex,
           );
         },
       ),
@@ -38,11 +38,11 @@ class _HomePageState extends State<HomePage> {
       child: ListView.builder(
         itemCount: 151,
         itemBuilder: (context, index) {
-          int id = index + 1;
+          int pokeIndex = index + 1;
           return Column(
             children: [
               PokeListCard(
-                pokeId: id,
+                pokeIndex: pokeIndex,
               ),
               const SizedBox(
                 height: 16,
@@ -64,7 +64,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Pokédex',
+          'Pokémon',
           style: TextStyle(
             color: Theme.of(context).backgroundColor,
           ),

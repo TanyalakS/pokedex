@@ -8,8 +8,8 @@ import 'package:pokedex/utilities/capitalize.dart';
 import 'package:pokedex/utilities/pokeTypeColor.dart';
 
 class PokeGridListCard extends StatefulWidget {
-  final int pokeId;
-  const PokeGridListCard({super.key, required this.pokeId});
+  final int pokeIndex;
+  const PokeGridListCard({super.key, required this.pokeIndex});
 
   @override
   State<PokeGridListCard> createState() => _PokeGridListCardState();
@@ -25,19 +25,25 @@ class _PokeGridListCardState extends State<PokeGridListCard> {
   PokeListResultsModel? poke;
   Color? cardColor;
   Color? cardColor2;
+  bool isTablet = false;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       pokeListBlocContext?.add(
-        PokeGetListEvent(id: widget.pokeId),
+        PokeGetListEvent(id: widget.pokeIndex),
       );
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    if (MediaQuery.of(context).size.width > 600) {
+      isTablet = true;
+    } else {
+      isTablet = false;
+    }
     return MultiBlocProvider(
       providers: [
         pokeListProvider,
@@ -71,8 +77,10 @@ class _PokeGridListCardState extends State<PokeGridListCard> {
             );
           }
           if (state is PokeListLoadingState) {
-            return const Center(
-              child: CircularProgressIndicator(),
+            return Center(
+              child: CircularProgressIndicator(
+                color: Theme.of(context).backgroundColor,
+              ),
             );
           }
           if (poke == null) {
@@ -115,7 +123,7 @@ class _PokeGridListCardState extends State<PokeGridListCard> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => PokeDetailScreen(
-                    pokeId: widget.pokeId,
+                    pokeIndex: widget.pokeIndex,
                     color1: cardColor!,
                     color2: cardColor2!,
                   ),

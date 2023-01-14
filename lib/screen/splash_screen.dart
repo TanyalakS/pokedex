@@ -33,14 +33,21 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double height = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Image.asset('assets/pikka.png'),
-          const CircularProgressIndicator(),
+          Center(
+            child: Image.asset(
+              'assets/pikka.png',
+              height: height / 3,
+            ),
+          ),
+          const CircularProgressIndicator(
+            color: Colors.yellow,
+          ),
         ],
       ),
     );

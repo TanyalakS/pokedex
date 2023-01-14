@@ -7,12 +7,12 @@ import 'package:pokedex/utilities/capitalize.dart';
 import 'package:pokedex/utilities/pokeTypeColor.dart';
 
 class PokeDetailScreen extends StatefulWidget {
-  final int pokeId;
+  final int pokeIndex;
   final Color color1;
   final Color color2;
   const PokeDetailScreen(
       {super.key,
-      required this.pokeId,
+      required this.pokeIndex,
       required this.color1,
       required this.color2});
 
@@ -28,13 +28,14 @@ class _PokeDetailScreenState extends State<PokeDetailScreen> {
   PokeListBloc? pokeListBlocContext;
   final PokeListRepository pokeListRepository = PokeListRepository();
   PokeListResultsModel? poke;
+  bool isTablet = false;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       pokeListBlocContext?.add(
-        PokeGetListEvent(id: widget.pokeId),
+        PokeGetListEvent(id: widget.pokeIndex),
       );
     });
   }
@@ -50,9 +51,13 @@ class _PokeDetailScreenState extends State<PokeDetailScreen> {
             widget.color2.withOpacity(0.7),
           ],
         ),
-        borderRadius: const BorderRadius.only(
-          bottomLeft: Radius.circular(200),
-          bottomRight: Radius.circular(200),
+        borderRadius: BorderRadius.only(
+          bottomLeft: isTablet
+              ? const Radius.circular(400)
+              : const Radius.circular(200),
+          bottomRight: isTablet
+              ? const Radius.circular(400)
+              : const Radius.circular(200),
         ),
       ),
       child: Column(
@@ -79,7 +84,9 @@ class _PokeDetailScreenState extends State<PokeDetailScreen> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(24, 16, 24, 16),
+            padding: isTablet
+                ? const EdgeInsets.fromLTRB(60, 16, 24, 16)
+                : const EdgeInsets.fromLTRB(24, 16, 24, 16),
             child: Align(
               alignment: Alignment.topLeft,
               child: Column(
@@ -106,14 +113,16 @@ class _PokeDetailScreenState extends State<PokeDetailScreen> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(bottom: 40),
+            padding: isTablet
+                ? const EdgeInsets.only(bottom: 40, right: 100)
+                : const EdgeInsets.only(bottom: 40),
             child: Align(
               alignment: Alignment.bottomRight,
               child: Image.network(
                 poke?.sprites?.frontDefault ?? "",
                 fit: BoxFit.cover,
-                height: 250,
-                width: 250,
+                height: isTablet ? 400 : 250,
+                width: isTablet ? 400 : 250,
               ),
             ),
           ),
@@ -128,8 +137,17 @@ class _PokeDetailScreenState extends State<PokeDetailScreen> {
       child: Column(
         children: [
           SizedBox(
-            height: 60,
-            width: poke!.types!.length > 1 ? 270 : 130,
+            height: isTablet ? 16 : 0,
+          ),
+          SizedBox(
+            height: isTablet ? 80 : 60,
+            width: poke!.types!.length > 1
+                ? isTablet
+                    ? 340
+                    : 270
+                : isTablet
+                    ? 150
+                    : 130,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: poke?.types?.length,
@@ -139,70 +157,95 @@ class _PokeDetailScreenState extends State<PokeDetailScreen> {
                 return Row(
                   children: [
                     Container(
-                      height: 40,
-                      width: 130,
+                      height: isTablet ? 60 : 40,
+                      width: isTablet ? 150 : 130,
                       color: colour,
                       child: Center(
                         child: Text(
                           poke != null
                               ? poke!.types![index].type!.name!.toUpperCase()
                               : "",
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: Colors.white,
+                            fontSize: isTablet ? 14 : 12,
                           ),
                         ),
                       ),
                     ),
-                    const SizedBox(
-                      width: 16,
+                    SizedBox(
+                      width: isTablet ? 32 : 16,
                     ),
                   ],
                 );
               },
             ),
           ),
-          const SizedBox(
-            height: 8,
+          SizedBox(
+            height: isTablet ? 32 : 8,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text("Order:"),
-              const SizedBox(
-                width: 24,
+              Text(
+                "Order:",
+                style: TextStyle(
+                  fontSize: isTablet ? 18 : 12,
+                ),
+              ),
+              SizedBox(
+                width: isTablet ? 32 : 24,
               ),
               Text(
                 poke != null ? poke!.order!.toString() : "",
+                style: TextStyle(
+                  fontSize: isTablet ? 18 : 12,
+                ),
               ),
             ],
           ),
-          const SizedBox(
-            height: 16,
+          SizedBox(
+            height: isTablet ? 24 : 16,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text("Height:"),
-              const SizedBox(
-                width: 24,
+              Text(
+                "Height:",
+                style: TextStyle(
+                  fontSize: isTablet ? 18 : 12,
+                ),
+              ),
+              SizedBox(
+                width: isTablet ? 32 : 24,
               ),
               Text(
                 poke != null ? poke!.height!.toString() : "",
+                style: TextStyle(
+                  fontSize: isTablet ? 18 : 12,
+                ),
               ),
             ],
           ),
-          const SizedBox(
-            height: 16,
+          SizedBox(
+            height: isTablet ? 24 : 16,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text("Weight:"),
-              const SizedBox(
-                width: 24,
+              Text(
+                "Weight:",
+                style: TextStyle(
+                  fontSize: isTablet ? 18 : 12,
+                ),
+              ),
+              SizedBox(
+                width: isTablet ? 32 : 24,
               ),
               Text(
                 poke != null ? poke!.weight!.toString() : "",
+                style: TextStyle(
+                  fontSize: isTablet ? 18 : 12,
+                ),
               ),
             ],
           ),
@@ -213,6 +256,11 @@ class _PokeDetailScreenState extends State<PokeDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (MediaQuery.of(context).size.width > 600) {
+      isTablet = true;
+    } else {
+      isTablet = false;
+    }
     return MultiBlocProvider(
       providers: [
         pokeListProvider,
@@ -236,7 +284,11 @@ class _PokeDetailScreenState extends State<PokeDetailScreen> {
             poke = state.results;
           }
           if (state is PokeListLoadingState) {
-            return const Center(child: CircularProgressIndicator());
+            return Center(
+              child: CircularProgressIndicator(
+                color: Theme.of(context).backgroundColor,
+              ),
+            );
           }
           if (poke == null) {
             return Container();

@@ -8,8 +8,8 @@ import 'package:pokedex/utilities/capitalize.dart';
 import 'package:pokedex/utilities/pokeTypeColor.dart';
 
 class PokeListCard extends StatefulWidget {
-  final int pokeId;
-  const PokeListCard({super.key, required this.pokeId});
+  final int pokeIndex;
+  const PokeListCard({super.key, required this.pokeIndex});
 
   @override
   State<PokeListCard> createState() => _PokeListCardState();
@@ -31,7 +31,7 @@ class _PokeListCardState extends State<PokeListCard> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       pokeListBlocContext?.add(
-        PokeGetListEvent(id: widget.pokeId),
+        PokeGetListEvent(id: widget.pokeIndex),
       );
     });
   }
@@ -71,7 +71,11 @@ class _PokeListCardState extends State<PokeListCard> {
             );
           }
           if (state is PokeListLoadingState) {
-            return const Center(child: CircularProgressIndicator());
+            return Center(
+              child: CircularProgressIndicator(
+                color: Theme.of(context).backgroundColor,
+              ),
+            );
           }
           if (poke == null) {
             return Container();
@@ -121,8 +125,6 @@ class _PokeListCardState extends State<PokeListCard> {
                     ),
                     Image.network(
                       poke?.sprites?.frontDefault ?? "",
-                      height: 150,
-                      width: 150,
                       fit: BoxFit.cover,
                     ),
                   ],
@@ -134,7 +136,7 @@ class _PokeListCardState extends State<PokeListCard> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => PokeDetailScreen(
-                    pokeId: widget.pokeId,
+                    pokeIndex: widget.pokeIndex,
                     color1: cardColor!,
                     color2: cardColor2!,
                   ),
